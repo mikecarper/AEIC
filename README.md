@@ -145,14 +145,15 @@ We perform lightweight training using at most `4x RTX 3090 (24G)` GPUs. Consider
 
 If you find this work helpful, please consider citing us. Thanks! 🥰
 ```bibtex
-@article{zhang2025ultra,
-  title={Ultra-Low Bitrate Perceptual Image Compression with Shallow Encoder},
-  author={Zhang, Tianyu and Liu, Dong and Chen, Chang Wen},
-  journal={arXiv preprint arXiv:2512.12229},
-  year={2025}
+@InProceedings{Zhang_2026_CVPR,
+    author    = {Zhang, Tianyu and Liu, Dong and Chen, Chang Wen},
+    title     = {Ultra-Low Bitrate Perceptual Image Compression with Shallow Encoder},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2026},
+    pages     = {12118-12128}
 }
-```
-```bibtex
+
 @InProceedings{Zhang_2025_ICCV,
     author    = {Zhang, Tianyu and Luo, Xin and Li, Li and Liu, Dong},
     title     = {StableCodec: Taming One-Step Diffusion for Extreme Image Compression},
