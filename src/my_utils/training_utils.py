@@ -24,7 +24,7 @@ def parse_args_training(input_args=None):
     parser.add_argument("--config", required=True)
     parser.add_argument("--output_dir", required=True)
     parser.add_argument("--lora_rank_unet", default=32, type=int)
-    parser.add_argument("--compile_model", default=True)
+    parser.add_argument("--compile_model", default=False)
     parser.add_argument("--use_tiled_vae", default=False)
     parser.add_argument("--use_tiled_unet", default=False)
     parser.add_argument("--allow_tf32", default=True)
@@ -40,13 +40,13 @@ def parse_args_training(input_args=None):
 
 
 class H5Dataset(Dataset):
-    def __init__(self, path, transform=None):
+    def __init__(self, path, transform=None, res=512):
         self.file_path = path
         self.dataset = h5py.File(self.file_path, 'r')
         with h5py.File(self.file_path, 'r') as file:
             self.dataset_len = len(file)
         self.transform = transform
-        self.keys = [key for key in self.dataset.keys() if self.dataset[key].shape[0] >= 512 and self.dataset[key].shape[1] >= 512]
+        self.keys = [key for key in self.dataset.keys() if self.dataset[key].shape[0] >= res and self.dataset[key].shape[1] >= res]
 
     def __getitem__(self, index):
         key = self.keys[index]

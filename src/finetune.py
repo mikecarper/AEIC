@@ -10,10 +10,11 @@ from compressai.datasets import ImageFolder
 import torch
 import torch.utils.checkpoint
 from torchvision import transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, ConcatDataset
 from torchmetrics.image import LearnedPerceptualImagePatchSimilarity
 
 import diffusers
+from diffusers.optimization import get_scheduler
 from diffusers.utils.import_utils import is_xformers_available
 
 from AEIC_trainer import AEIC_ME_Trainer

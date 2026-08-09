@@ -248,12 +248,19 @@ class DINOv3(torch.nn.Module):
 
         self.model.eval()
         self.model.requires_grad = False
-        self.input_resolution = 224
         self.image_mean = torch.tensor([0.485, 0.456, 0.406])
         self.image_std = torch.tensor([0.229, 0.224, 0.225])
         
     def __call__(self, x):
-        x = F.interpolate(x*0.5+0.5, size=(self.input_resolution, self.input_resolution), mode='area')
+        H = x.shape[2]
+
+        ### For better performance, plese use 448 for images larger than 512, if memory allows. 
+        ### Otherwise, use 224 for all images.
+        # input_resolution = 448 if H > 512 else 224
+        input_resolution = 224
+
+
+        x = F.interpolate(x*0.5+0.5, size=(input_resolution, input_resolution), mode='area')
         x = x - self.image_mean[:, None, None].to(x.device)
         x /= self.image_std[:, None, None].to(x.device)
         

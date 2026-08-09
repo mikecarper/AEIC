@@ -26,8 +26,8 @@ University of Science and Technology of China, The Hong Kong Polytechnic Univers
    - Maintains competitive decoding speed compared to existing methods.
 
 ## :hourglass: Updates
-[TODO] Pack the remaining code ...  
-**[2026/04/06] Release training code for AEIC-ME.**  
+[2026/08/09] Release training code for AEIC-SE.    
+[2026/04/06] Release training code for AEIC-ME.  
 [2026/03/11] Release pretrained checkpoints for inference.  
 [2026/03/10] Results on benchmarks are now available, see `results/`.   
 [2026/02/26] Initial release of this repo.     
@@ -138,7 +138,14 @@ We perform lightweight training using at most `4x RTX 3090 (24G)` GPUs. Consider
    *Note: You may skip pretraining with our pretrained [AEIC_ME_pretrain.pkl](https://drive.google.com/drive/folders/1vioCW4EIxQiuLkWHKj7xbMi7WAVcWqJI?usp=drive_link).*   
 
 2. **Finetune towards target bitrates with GAN:** `bash finetune.sh`  
-   *Note: Adjust `base.lambda_rate` in `config/finetune_AEIC_ME.yaml` to reach different ultra-low bitrates.*
+   *Note: Adjust `base.lambda_rate` in `config/finetune_AEIC_ME.yaml` to reach different ultra-low bitrates.*  
+
+**Step 3: Distill AEIC-SE (Shallow Encoder) from AEIC-ME**  
+
+1. **Pretrain SE with encoder-side distillation and relaxed bitrates:** `bash pretrain_ME.sh`  
+
+2. **Finetune SE with decoder-side distillation and GAN:** `bash finetune_SE.sh`  
+   *Note: Adjust `common.lambda_rate` in `config/finetune_AEIC_SE.yaml` to reach different ultra-low bitrates.*
 
 
 ## :book: Citation

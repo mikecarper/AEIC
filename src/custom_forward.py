@@ -99,7 +99,7 @@ def MyUNet2DConditionModel_SD_forward_dual(self, x, mode):
         x = self.conv_act(x)
         x = self.teacher_conv_out(x)
         features.append(x)
-        return features
+        return x, features
     else:
         features = [x]
         x = self.student_conv_in(x)
