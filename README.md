@@ -142,7 +142,7 @@ We perform lightweight training using at most `4x RTX 3090 (24G)` GPUs. Consider
 
 **Step 3: Distill AEIC-SE (Shallow Encoder) from AEIC-ME**  
 
-1. **Pretrain SE with encoder-side distillation and relaxed bitrates:** `bash pretrain_ME.sh`  
+1. **Pretrain SE with encoder-side distillation and relaxed bitrates:** `bash pretrain_SE.sh`  
 
 2. **Finetune SE with decoder-side distillation and GAN:** `bash finetune_SE.sh`  
    *Note: Adjust `common.lambda_rate` in `config/finetune_AEIC_SE.yaml` to reach different ultra-low bitrates.*
