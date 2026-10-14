@@ -1,0 +1,27 @@
+{
+  "environment": "Eight-vCPU VMware VM on an Intel Core i5-14600K host",
+  "inference": "Generic ncnn CPU build with SIMD and OpenMP disabled; no GPU",
+  "includes_model_loading": true,
+  "threads_requested": 4,
+  "photo": "CC0 Pixnio river photograph, Lanczos-scaled and center-cropped first",
+  "sizes": {
+    "128": {
+      "encoded_bytes": 137,
+      "encode_seconds": 0.29128449500421993,
+      "full_decode_seconds": 17.21313775300223,
+      "decode_peak_rss_kib": 279156,
+      "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7"
+    },
+    "576": {
+      "encoded_bytes": 1783,
+      "encode_seconds": 1.6681882689881604,
+      "original_full_decode_seconds": 132.6483764279983,
+      "original_decode_peak_rss_kib": 574908,
+      "memory_optimized_full_decode_seconds": 133.567,
+      "memory_optimized_decode_peak_rss_kib": 320168,
+      "memory_optimized_tensor_hashes_match_original": 511,
+      "memory_optimized_png_byte_identical_to_original_host_build": true,
+      "encoded_sha256": "35c15d496c87270f38a801562f0297e8b2d9c4a01ce94f809fdec58b5564d385"
+    }
+  }
+}

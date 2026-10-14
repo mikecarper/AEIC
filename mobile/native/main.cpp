@@ -7,6 +7,7 @@
 #include "file_hash.h"
 #include "tensor_memory.h"
 #include "pause_counter.h"
+#include "process_supervisor.h"
 #include "net.h"
 #include <algorithm>
 #include <chrono>
@@ -54,6 +55,7 @@ struct Args {
     std::string spill_dir;
     std::string pause_file;
     bool hash_decimal = false;
+    bool supervise = false;
     std::vector<std::string> tensors;
     int threads = 2;
     int model_size = 0;
@@ -1036,6 +1038,7 @@ Args arguments(int argc, char** argv) {
         if (key == "--strict-verify") { result.strict = true; continue; }
         if (key == "--best-effort") { result.best_effort = true; continue; }
         if (key == "--hash-decimal") { result.hash_decimal = true; continue; }
+        if (key == "--supervise") { result.supervise = true; continue; }
         if (key == "--help") {
             std::printf("aeic_decode --model-dir DIR --bitstream FILE --output FILE.png|FILE.ppm\n"
                 "aeic_decode --encode --model-dir DIR --input FILE.ppm --bitstream-output FILE.aeic\n"
@@ -1046,6 +1049,7 @@ Args arguments(int argc, char** argv) {
                 "  [--best-effort] [--stage-timeout-ms N] (recover with DEGRADED warnings)\n"
                 "  [--spill-dir DIR] (exact FP32 renderer scratch and bounded row tiles)\n"
                 "  [--pause-time-file FILE] (private cumulative paused-ms counter)\n"
+                "  [--supervise] (app launcher stays in Android's process-reaper group)\n"
                 "Diagnostics only: --stage-only NAME --tensor SLOT=C,H,W:FILE.f32\n");
             std::printf("File integrity: aeic_decode --hash-file FILE [--hash-decimal]\n");
             std::exit(0);
@@ -1091,26 +1095,19 @@ Args arguments(int argc, char** argv) {
 }
 }
 
-int main(int argc, char** argv) {
+int codec_main(const Args& args, bool supervised_worker) {
     try {
-        Args args = arguments(argc, argv);
-        if (!args.hash_file.empty()) {
-            const auto hash = aeic::hash_file_streamed(args.hash_file);
-            std::printf("HASH_FILE bytes=%llu fnv1a64=%s", static_cast<unsigned long long>(hash.bytes),
-                aeic::hash_hex(hash.fnv1a64).c_str());
-            if (args.hash_decimal) std::printf(" fnv1a64_decimal=%llu", static_cast<unsigned long long>(hash.fnv1a64));
-            std::printf(" path=%s\n", args.hash_file.c_str());
-            return 0;
-        }
 #if defined(__linux__)
         // A job owns its process group, including recovery children, so the app
         // can pause/resume/cancel it without sending signals to unrelated jobs.
-        pid_t parent = getppid();
-        if (setpgid(0, 0) != 0 || getpgrp() != getpid()) throw std::runtime_error("cannot create codec process group");
-        if (prctl(PR_SET_PDEATHSIG, SIGKILL) != 0) throw std::runtime_error("cannot guard codec parent lifetime");
-        if (getppid() != parent) { raise(SIGKILL); return 1; }
-        std::printf("PROCESS_INFO pid=%ld group=%ld\n", static_cast<long>(getpid()), static_cast<long>(getpgrp()));
-        std::fflush(stdout);
+        if (!supervised_worker) {
+            pid_t parent = getppid();
+            if (setpgid(0, 0) != 0 || getpgrp() != getpid()) throw std::runtime_error("cannot create codec process group");
+            if (prctl(PR_SET_PDEATHSIG, SIGKILL) != 0) throw std::runtime_error("cannot guard codec parent lifetime");
+            if (getppid() != parent) { raise(SIGKILL); return 1; }
+            std::printf("PROCESS_INFO pid=%ld group=%ld\n", static_cast<long>(getpid()), static_cast<long>(getpgrp()));
+            std::fflush(stdout);
+        }
 #endif
         if (args.integers_only) std::printf("VERIFY_MODE exact_integer_references_only=true float_references=false\n");
         if (!args.pause_file.empty()) {
@@ -1191,6 +1188,29 @@ int main(int argc, char** argv) {
         std::printf("RESULT_STATUS degraded=%s recovery_events=%zu child_peak_kb=%ld\n",
             recovery_events ? "true" : "false", recovery_events, isolated_peak_kb);
         return 0;
+    } catch (const std::exception& error) {
+        std::fprintf(stderr, "AEIC_ERROR %s\n", error.what());
+        return 1;
+    }
+}
+
+int main(int argc, char** argv) {
+    try {
+        Args args = arguments(argc, argv);
+        if (!args.hash_file.empty()) {
+            const auto hash = aeic::hash_file_streamed(args.hash_file);
+            std::printf("HASH_FILE bytes=%llu fnv1a64=%s", static_cast<unsigned long long>(hash.bytes),
+                aeic::hash_hex(hash.fnv1a64).c_str());
+            if (args.hash_decimal) std::printf(" fnv1a64_decimal=%llu", static_cast<unsigned long long>(hash.fnv1a64));
+            std::printf(" path=%s\n", args.hash_file.c_str());
+            return 0;
+        }
+        if (args.supervise) {
+            return aeic::supervise_job([&]() { return codec_main(args, true); },
+                [](int pid) { std::printf("PROCESS_INFO pid=%d group=%d\n", pid, pid); std::fflush(stdout); },
+                [](int pid) { std::printf("PROCESS_EXIT pid=%d group=%d\n", pid, pid); std::fflush(stdout); });
+        }
+        return codec_main(args, false);
     } catch (const std::exception& error) {
         std::fprintf(stderr, "AEIC_ERROR %s\n", error.what());
         return 1;

@@ -129,6 +129,14 @@ Linux and Android jobs create their own process group and emit
 `PROCESS_INFO pid=N group=N` before model work. The app can pause/resume that
 group and must resume it before termination. A parent-death guard prevents
 an app death from leaving a stopped native process behind.
+App launches must add `--supervise`: Android 5's Java process reaper uses
+`waitpid(0)`, so its direct launcher must remain in the app's inherited group.
+The launcher forks a guarded worker, creates only that worker's signal group,
+and emits the handshake before opening its inference startup gate. It waits
+for the worker, terminates any remaining group members while the leader PID
+is still reserved, reaps the leader, then emits `PROCESS_EXIT pid=N group=N`
+before returning the worker's exit status. The app retires that group and still
+waits for the Java launcher to finish before deleting the job workspace.
 `--pause-time-file FILE` reads the app's cumulative paused milliseconds. Its
 bounded monotonic counter excludes paused intervals from best-effort stage
 deadlines; ordinary strict inference has no per-stage recovery timeout.

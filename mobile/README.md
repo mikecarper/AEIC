@@ -72,6 +72,8 @@ The same native codec was measured in an eight-vCPU VM on an Intel i5-14600K
 host, without a GPU. This generic ncnn build disables SIMD and OpenMP, so
 inference is largely serial despite requesting four threads. These measurements
 describe this build, rather than an optimized desktop performance limit.
+Exact timings, memory measurements, and hashes are recorded in
+[computer-results.json](examples/pixnio/computer-results.json).
 
 | Input | Compressed file | Computer encode | Computer full decode |
 |---|---:|---:|---:|
