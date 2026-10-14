@@ -14,6 +14,10 @@ University of Science and Technology of China, The Hong Kong Polytechnic Univers
 
 </div>
 
+Android CPU encoding and decoding, including the Android 5.1 phone experiments,
+are documented in the [native mobile port](mobile/README.md). The port supports
+square sizes from 128 to 576 pixels and optional best-effort recovery.
+
 <p align="center"><img src="assets/overview.png" width="70%"></p>
 
 >   

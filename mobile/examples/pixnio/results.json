@@ -1,0 +1,23 @@
+{
+  "phone": "LG L51AL",
+  "android": "5.1.1",
+  "api": 22,
+  "abi": "armeabi-v7a",
+  "threads": 4,
+  "size": 128,
+  "encoded_bytes": 137,
+  "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7",
+  "encoded_byte_identical_to_original_cpu_codec": true,
+  "encode_seconds": 2.172,
+  "encode_peak_rss_kib": 46980,
+  "decode_seconds": 114.477,
+  "decode_peak_rss_kib": 242204,
+  "decode_degraded": false,
+  "decoded_png_bytes": 45610,
+  "best_effort_seconds": 137.142,
+  "best_effort_degraded": true,
+  "best_effort_recovery_events": 6,
+  "native_executable_sha256": "9b691588f60a28b3464296f0f280913f75d6188d00c0a028040a7981c1798861",
+  "ncnn_commit": "b0f97f43f266617ff5e5096d440dbe3f9a4c35b8",
+  "source": "https://pixnio.com/nature-landscapes/river/landscape-water-nature-tree-river-forest-mountain"
+}
