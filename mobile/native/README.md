@@ -114,6 +114,29 @@ Decode that phone-generated bitstream:
   --verify-dir /data/local/tmp/aeic/model256/references
 ```
 
+Use `--spill-dir /path/to/job/scratch` for the app memory profile. The directory
+must belong to the codec process. Each run creates a fresh private child
+directory and removes only its own files on normal exit or exceptions. The app
+also removes its job workspace after cancellation. Retained renderer tensors
+are stored as exact FP32 CHW bytes with streamed checksums, bounded I/O, and
+page-cache release advice. Current tensors stay in memory; restoring a skip
+does not alter its values. Large 1x1 and same-padding 3x3 convolutions, including
+nearest-neighbor upsampling graphs, run in 64-row sections with valid halos.
+Consumed inputs may reuse uniquely owned storage. Shared aliases are preserved.
+Encoder and entropy arithmetic are unchanged by this option.
+
+Linux and Android jobs create their own process group and emit
+`PROCESS_INFO pid=N group=N` before model work. The app can pause/resume that
+group and must resume it before termination. A parent-death guard prevents
+an app death from leaving a stopped native process behind.
+`--pause-time-file FILE` reads the app's cumulative paused milliseconds. Its
+bounded monotonic counter excludes paused intervals from best-effort stage
+deadlines; ordinary strict inference has no per-stage recovery timeout.
+
+`validate_tensor_memory.py BASELINE_RUN CANDIDATE_RUN` verifies that completed
+host runs have identical hashes for every FP32 tensor and identical saved image
+bytes. Each run directory must contain `decode.log` with `DECODE_COMPLETE`.
+
 Float references use `stage.slot.f32`, plus `z_hat.f32`, `y_hat.f32`,
 `l_T.f32`, and `residual.f32`. Float differences are logged; add
 `--strict-verify --verify-tolerance 0.001` to make them fatal.

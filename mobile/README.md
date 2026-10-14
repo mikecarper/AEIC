@@ -64,6 +64,26 @@ Optional `--best-effort` recovery isolates model stages and labels substituted
 results `DEGRADED`. A damaged 128-pixel test with reference and model failures
 completed in 137.142 seconds with six recovery events and a 44,449-byte PNG.
 Fallback can produce a usable image but cannot restore lost details.
+The 576-pixel best-effort memory requirement has not been verified on this phone.
+
+## Computer CPU measurements
+
+The same native codec was measured in an eight-vCPU VM on an Intel i5-14600K
+host, without a GPU. This generic ncnn build disables SIMD and OpenMP, so
+inference is largely serial despite requesting four threads. These measurements
+describe this build, rather than an optimized desktop performance limit.
+
+| Input | Compressed file | Computer encode | Computer full decode |
+|---|---:|---:|---:|
+| 128 × 128 | 137 bytes | 0.291 s | 17.213 s |
+| 576 × 576 | 1,783 bytes | 1.668 s | 132.648 s |
+
+The updated memory plan spills large skip tensors to bounded scratch files and
+reuses eligible owned tensor storage. Its 576-pixel host decode took 133.567
+seconds with **312.7 MiB peak RSS**, reduced from 561.4 MiB. All 511 FP32 tensor
+hashes and the final PNG bytes matched the previous host build exactly. The
+updated strict decoder still needs its 576-pixel phone retry; this host result
+does not verify phone memory use or best-effort reconstruction at that size.
 
 ## Android app service verification
 
@@ -86,8 +106,10 @@ not degraded. Its 41,372-byte PNG and measured hashes are in the
 measurements above.
 
 The app has encoded the 576-pixel image into the exact 1,783-byte reference
-stream; its complete app reconstruction is still pending. These measurements
-verify the app service and native backend path.
+stream. Its first complete app decode attempt was killed by phone memory
+pressure. A strict retry with the updated memory plan is pending, and no final
+576-pixel phone PNG has been verified. The successful 128-pixel measurements
+verify the app service and native backend path using the earlier native build.
 
 ## Host export
 
