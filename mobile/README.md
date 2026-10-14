@@ -66,6 +66,39 @@ completed in 137.142 seconds with six recovery events and a 44,449-byte PNG.
 Fallback can produce a usable image but cannot restore lost details.
 The 576-pixel best-effort memory requirement has not been verified on this phone.
 
+## Fast and Accurate CPU decoding
+
+The decoder now offers Fast and Accurate modes. The app defaults to Fast when
+its backend reports no usable GPU decoding. Accurate preserves the conservative
+FP32 renderer kernels. Both modes keep encoding and entropy decoding unchanged.
+Fast currently optimizes images up to 256 pixels, validated on the phone at
+128 and 256; larger images use the conservative renderer memory profile.
+
+On the Android 5.1.1 phone, paired four-thread trials before the weight-buffer
+allocation correction measured 123.298 → 93.465 seconds at 128 pixels and
+410.207 → 261.850 seconds at 256 pixels. Peak native RAM stayed similar. The
+137-byte and 407-byte streams were exact. Respectively 16 and 42 RGB channel
+values changed, each by one level out of 255. These are measured renderer-mode
+comparisons, not final application-service timings. See
+[cpu-decoder-results.json](examples/pixnio/cpu-decoder-results.json).
+
+The final shipped phone binary completed a further 256-pixel Fast decode in
+258.846 seconds at 238.3 MiB native RSS, with the same compressed bytes and
+PNG as the validated candidate. The final app service completed 128-pixel
+Fast encoding/decoding in 2.024/89.325 seconds, including a deliberate pause.
+Accurate cancel and Fast pause/resume were verified on the phone. The normal
+full UI app was restored and both reconstruction choices were checked.
+
+The final AVX2/OpenMP desktop build measured Accurate/Fast decoding of
+9.443/8.312 seconds at 128 pixels and 11.651/10.131 seconds at 256 pixels.
+It used 315–319 MiB native RSS. These measurements include model loading
+and use four threads in the same eight-vCPU i5-14600K VM.
+
+For CLI selection, use `--decoder-mode fast` or `--decoder-mode accurate`.
+Normal app preferences and the existing CPU-thread default are preserved.
+The small `--bench-spatial 8..32` option is restricted to single-stage
+diagnostics; production image sizes remain 128–576 in steps of 64.
+
 ## Computer CPU measurements
 
 The same native codec was measured in an eight-vCPU VM on an Intel i5-14600K

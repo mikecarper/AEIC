@@ -37,6 +37,48 @@ and measurements; [results.json](results.json) retains the separate CLI results.
 
 ![Reconstructed through the Android app service](app-decoded128.png)
 
+## Fast and Accurate phone comparison
+
+Real trained convolution stages were first tested with 16×16 spatial inputs,
+then the complete 128- and 256-pixel encode/decode cycles were tested on the
+same Android 5.1.1 phone with four threads. The following paired trials used
+the renderer-mode candidate before the final weight-buffer allocation fix:
+
+| Image | Conservative Accurate | Fast | Compressed bytes |
+|---|---:|---:|---:|
+| 128 × 128 | 123.298 s | 93.465 s | 137 |
+| 256 × 256 | 410.207 s | 261.850 s | 407 |
+
+Each image passed all 10 encoder and 9 decoder entropy index/symbol checks.
+Peak native RSS was 237,820/238,368 KiB at 128 pixels and
+244,304/244,204 KiB at 256 pixels (Accurate/Fast). Fast changed only 16 of
+49,152 and 42 of 196,608 RGB channel values respectively, each by one level
+out of 255. Full measurements and binary identities are in
+[cpu-decoder-results.json](cpu-decoder-results.json).
+
+Fast is the CPU default, while Accurate remains selectable. Above 256 pixels,
+Fast retains conservative renderer kernels to protect the older phone's RAM.
+The historical 576-pixel proof below remains separate from these CPU trials.
+
+The final shipped ARMv7 binary, including the weight-buffer allocation fix,
+completed a further 256-pixel phone cycle in 258.846 seconds at 244,016 KiB.
+Its 407-byte compressed file and decoded PNG are byte-identical to the earlier
+Fast candidate. The final app service encoded 128 pixels in 2.024 seconds and
+decoded in 89.325 seconds, including a deliberate pause; native decoding took
+88.928 seconds at 238,280 KiB. Accurate pause/cancel left no PNG or worker,
+and Fast pause/resume reached kernel states T/R and completed with zero active
+jobs. The normal full app was then installed; both mode choices were checked
+in Settings, with Fast left selected.
+
+![Final Fast reconstruction through the phone app](app-fast-decoded128.png)
+
+The final AVX2/OpenMP desktop build in the eight-vCPU i5-14600K VM decoded
+128 pixels in 9.443 seconds Accurate / 8.312 seconds Fast, and 256 in
+11.651 / 10.131 seconds. Normal peak native RSS was 315–319 MiB.
+The allocation correction preserves all 511 intermediate tensor hashes
+within each mode. These desktop results and final phone proofs are also in
+the JSON report above. GPU inference was not used.
+
 ## 576-pixel app cycle
 
 The updated full app encoded and decoded the 576-pixel version on the same

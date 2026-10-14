@@ -24,8 +24,36 @@ be claimed until `DECODE_COMPLETE` appears and the output is inspected.
 
 ## Build
 
-Configure ncnn for the same Android ABI, API, and static C++ runtime. A typical
-runner build after installing ncnn is:
+The CPU decoder defaults to `--decoder-mode fast`. Use `--decoder-mode accurate`
+to retain conservative FP32 renderer kernels. Fast keeps encoder and entropy
+arithmetic unchanged and uses FP32 packing plus memory-bounded F(2,3) Winograd
+only in renderer graphs. Complete phone trials cover 128 and 256 pixels;
+192 pixels uses the same bounded policy. Larger images automatically retain
+conservative renderer kernels. The native backend currently has no usable GPU
+decoder, so its CPU default is Fast.
+
+Fast may use 16-row convolution sections when that keeps transformed weights,
+padding, and temporary buffers within the checked budget. Accurate keeps the
+existing 64-row memory profile. Neither mode changes transmitted file sizes.
+See [the measured phone comparison](https://github.com/mikecarper/AEIC/blob/main/mobile/examples/pixnio/cpu-decoder-results.json).
+
+`build_android.sh` pins ncnn and applies
+`patches/ncnn-fp16-buffer.patch`, which corrects a byte count used to size a
+float16 input buffer. Weights remain FP32 at runtime. The patch reduces loading
+work without changing any weight or intermediate tensor value; the builder
+rejects other tracked ncnn changes. Android links OpenMP statically, including
+the custom attention head loop.
+
+Configure ncnn for the same Android ABI, API, and static C++ runtime.
+
+For the measured Linux x86-64 desktop profile, use
+`build_cpu_avx2.sh NCNN_SOURCE mobile/native OUTPUT_DIR`. It checks AVX2,
+FMA and F16C support, pins the same ncnn allocation patch, enables OpenMP,
+and excludes unsupported AVX-512/AVX-NE-CONVERT kernels. The full decoder
+and native tests are built together. This is a separate CPU build from the
+Android ABI binaries.
+
+A typical Android runner build after installing ncnn is:
 
 ```sh
 cmake -S mobile/native -B build-android \

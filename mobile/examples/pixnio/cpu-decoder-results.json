@@ -1,0 +1,227 @@
+{
+  "format": "aeic-cpu-decoder-results-v1",
+  "image_source": "https://pixnio.com/nature-landscapes/river/landscape-water-nature-tree-river-forest-mountain",
+  "license": "CC0",
+  "phone": "LG L51AL, Android 5.1.1/API22, ARMv7 Cortex-A7, about910MiB system RAM",
+  "threads": 4,
+  "timing": "native whole encode/decode including model loading; excludes adb transfers",
+  "comparison_scope": "Paired pre-weight-buffer-fix renderer mode trials; final shipping results recorded separately",
+  "default_decoder": "fast for current CPU-only backend",
+  "accurate_decoder": "conservative FP32 renderer kernels; encoder and entropy unchanged in both modes",
+  "fast_max_full_size": 256,
+  "larger_size_fallback": "conservative renderer kernels",
+  "paired_phone_trials": [
+    {
+      "size": 128,
+      "threads": 4,
+      "candidate": "d0e5d58cddef368608a46942b826e494a9c87b5db2918e0f8406aee8f975a38e",
+      "encode": {
+        "seconds": 2.373,
+        "peak_kib": 42688,
+        "weight_pipeline_seconds": 1.530853,
+        "inference_seconds": 0.596237,
+        "verified_integer_groups": 10
+      },
+      "encoded.aeic": {
+        "bytes": 137,
+        "sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7"
+      },
+      "decode": {
+        "seconds": 93.465,
+        "peak_kib": 238368,
+        "weight_pipeline_seconds": 42.404854,
+        "inference_seconds": 42.198155,
+        "verified_integer_groups": 9
+      },
+      "decoded.png": {
+        "bytes": 45610,
+        "sha256": "1eedb31aecc38966f856c42c6c390b160d1a3a080f40deb45f5a3b0f67ad7991"
+      },
+      "encode_byte_exact": true,
+      "pixels_vs_accurate": {
+        "max_channel_delta": 1,
+        "changed_channel_values": 16,
+        "total_channel_values": 49152,
+        "psnr_db": 83.00501572227384
+      },
+      "accurate_decode": {
+        "seconds": 123.298,
+        "peak_kib": 237820,
+        "verified_integer_groups": 9
+      },
+      "speedup": 1.319189001230407,
+      "seconds_reduction_percent": 24.195850703174425
+    },
+    {
+      "size": 256,
+      "threads": 4,
+      "candidate": "d0e5d58cddef368608a46942b826e494a9c87b5db2918e0f8406aee8f975a38e",
+      "encode": {
+        "seconds": 3.852,
+        "peak_kib": 43296,
+        "weight_pipeline_seconds": 1.596562,
+        "inference_seconds": 1.899073,
+        "verified_integer_groups": 10
+      },
+      "encoded.aeic": {
+        "bytes": 407,
+        "sha256": "52c348d6177d0d8aea6c62efd1a7d05ef88c43b1051a9c32fb8ed4d5851dc92c"
+      },
+      "decode": {
+        "seconds": 261.85,
+        "peak_kib": 244204,
+        "weight_pipeline_seconds": 45.445289,
+        "inference_seconds": 181.1497,
+        "verified_integer_groups": 9
+      },
+      "decoded.png": {
+        "bytes": 171240,
+        "sha256": "47dd2bd74063ce386e516c55c84f678b24ef7e3bda8fccc1efed4d578024bb6e"
+      },
+      "encode_byte_exact": true,
+      "pixels_vs_accurate": {
+        "max_channel_delta": 1,
+        "changed_channel_values": 42,
+        "total_channel_values": 196608,
+        "psnr_db": 84.8343225581337
+      },
+      "accurate_decode": {
+        "seconds": 410.207,
+        "peak_kib": 244304,
+        "verified_integer_groups": 9
+      },
+      "speedup": 1.5665724651518043,
+      "seconds_reduction_percent": 36.16637453773338
+    }
+  ],
+  "final_armv7_sha256": "7a1e593042f2352a825ad68d37f78f338fc82352866becf8acbb6ac22ededd8b",
+  "final_arm64_sha256": "75785ce96bf7586cb8e8a380f8c62239cda859be80bdcbdb4fbe359c7293274a",
+  "final_shipping_phone256": {
+    "encode": {
+      "seconds": 4.449,
+      "peak_kib": 43244,
+      "integer_groups": 10
+    },
+    "encoded.aeic": {
+      "bytes": 407,
+      "sha256": "52c348d6177d0d8aea6c62efd1a7d05ef88c43b1051a9c32fb8ed4d5851dc92c"
+    },
+    "decode": {
+      "seconds": 258.846,
+      "peak_kib": 244016,
+      "integer_groups": 9
+    },
+    "decoded.png": {
+      "bytes": 171240,
+      "sha256": "47dd2bd74063ce386e516c55c84f678b24ef7e3bda8fccc1efed4d578024bb6e"
+    },
+    "encoded_exact_reference": true,
+    "png_exact_prior_candidate": true
+  },
+  "final_shipping_app_service128": {
+    "complete": true,
+    "size": 128,
+    "threads": 4,
+    "accurate_encode_ms": 3285,
+    "encoded_bytes": 137,
+    "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7",
+    "accurate_cancel": {
+      "kernel_state": "T",
+      "worker_reaped": true,
+      "png_written": false,
+      "active_jobs": 0
+    },
+    "fast_encode_ms": 2024,
+    "fast_decode_ms": 89325,
+    "rgb_bytes": 49152,
+    "png_bytes": 41372,
+    "png_sha256": "a98e07a461b4d0610d13af832cfc48ca87a47b98e5ba6cab38ba7f69d19ee423",
+    "degraded": false,
+    "usable_gpu_acceleration": false,
+    "fast_pause_resume": {
+      "paused_kernel_state": "T",
+      "resumed_kernel_state": "R",
+      "worker_reaped": true
+    },
+    "active_jobs": 0,
+    "timing_includes_deliberate_pause": true,
+    "preferences_restored": true,
+    "thread_override_persisted": false
+  },
+  "final_desktop_trials": [
+    {
+      "size": 128,
+      "mode": "accurate",
+      "threads": 4,
+      "whole_decode_seconds": 9.433,
+      "wall_seconds": 9.442943675996503,
+      "peak_rss_kib": 314976,
+      "exact_entropy_groups": 9,
+      "exact_tensor_hashes_vs_same_mode_before_buffer_fix": 511,
+      "unchanged_tensor_hashes": true,
+      "encoded_bytes": 137,
+      "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7",
+      "pixels_vs_accurate_or_baseline": {
+        "max_channel_delta": 0,
+        "changed_channel_values": 0,
+        "total_channel_values": 49152
+      }
+    },
+    {
+      "size": 128,
+      "mode": "fast",
+      "threads": 4,
+      "whole_decode_seconds": 8.304,
+      "wall_seconds": 8.311820249000448,
+      "peak_rss_kib": 315076,
+      "exact_entropy_groups": 9,
+      "exact_tensor_hashes_vs_same_mode_before_buffer_fix": 511,
+      "unchanged_tensor_hashes": true,
+      "encoded_bytes": 137,
+      "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7",
+      "pixels_vs_accurate_or_baseline": {
+        "max_channel_delta": 1,
+        "changed_channel_values": 11,
+        "total_channel_values": 49152
+      }
+    },
+    {
+      "size": 256,
+      "mode": "accurate",
+      "threads": 4,
+      "whole_decode_seconds": 11.641,
+      "wall_seconds": 11.651204681998934,
+      "peak_rss_kib": 318908,
+      "exact_entropy_groups": 9,
+      "exact_tensor_hashes_vs_same_mode_before_buffer_fix": 511,
+      "unchanged_tensor_hashes": true,
+      "encoded_bytes": 407,
+      "encoded_sha256": "52c348d6177d0d8aea6c62efd1a7d05ef88c43b1051a9c32fb8ed4d5851dc92c",
+      "pixels_vs_accurate_or_baseline": {
+        "max_channel_delta": 0,
+        "changed_channel_values": 0,
+        "total_channel_values": 196608
+      }
+    },
+    {
+      "size": 256,
+      "mode": "fast",
+      "threads": 4,
+      "whole_decode_seconds": 10.122,
+      "wall_seconds": 10.131231024002773,
+      "peak_rss_kib": 319316,
+      "exact_entropy_groups": 9,
+      "exact_tensor_hashes_vs_same_mode_before_buffer_fix": 511,
+      "unchanged_tensor_hashes": true,
+      "encoded_bytes": 407,
+      "encoded_sha256": "52c348d6177d0d8aea6c62efd1a7d05ef88c43b1051a9c32fb8ed4d5851dc92c",
+      "pixels_vs_accurate_or_baseline": {
+        "max_channel_delta": 1,
+        "changed_channel_values": 54,
+        "total_channel_values": 196608
+      }
+    }
+  ],
+  "desktop_environment": "8-vCPU VMware VM on Intel Core i5-14600K, AVX2/FMA/F16C ncnn, OpenMP, CPU-only; normal allocator profile",
+  "installed_normal_apk_sha256": "a06b8f719969f3d7fe6731f19b912b6fea7a7b7be2a8fbf9e09f06213c1ad0a9"
+}
