@@ -3,7 +3,7 @@
 This prototype runs AEIC-SE encoding and decoding with native ncnn CPU inference
 on ARMv7 NEON, Android API 21 or later. The tested phone is an LG L51AL running
 Android 5.1.1 / API 22 with 1 GB RAM. The native CLI is accessed through ADB;
-the Flutter app service has also completed an on-device 128-pixel round trip.
+the Flutter app service has completed on-device 128- and 576-pixel round trips.
 
 The supported square input sizes are **128, 192, 256, 320, 384, 448, 512, and
 576 pixels**. Export a renderer parameter set for the chosen size and use its
@@ -47,10 +47,10 @@ The 128-pixel run produced a 45,610-byte PNG; the 256-pixel run produced a
 by 0.579 RGB8 levels on average (48.64 dB PSNR). This is a lossy reconstruction;
 its PSNR against the scaled original is 16.12 dB. At 512 pixels, mean error
 against the CPU reference is 0.505 RGB8 levels (50.618 dB PSNR). Full 576-pixel
-phone reconstruction is pending.
+reconstruction has also passed through the app service, as measured below.
 
 All eight CPU files pass exact entropy round-trip checks. The intermediate
-sizes and 576 pixels still need full phone RGB validation. File size depends
+sizes still need full phone RGB validation. File size depends
 on image content: accepting a resolution in this range does not guarantee a
 2,000-byte or 2,048-byte file budget. The measured 576-pixel file fits both
 limits for this photograph.
@@ -84,8 +84,8 @@ The updated memory plan spills large skip tensors to bounded scratch files and
 reuses eligible owned tensor storage. Its 576-pixel host decode took 133.567
 seconds with **312.7 MiB peak RSS**, reduced from 561.4 MiB. All 511 FP32 tensor
 hashes and the final PNG bytes matched the previous host build exactly. The
-updated strict decoder still needs its 576-pixel phone retry; this host result
-does not verify phone memory use or best-effort reconstruction at that size.
+updated strict decoder also completed its 576-pixel phone app retry at
+287.2 MiB peak native RSS. Best-effort memory at that size remains unverified.
 
 ## Android app service verification
 
@@ -98,6 +98,7 @@ The test used four native threads; the production default remains two.
 | Input | Compressed file | Service encode | Service decode | Native decode | Native decode peak RSS |
 |---|---:|---:|---:|---:|---:|
 | 128 × 128 | 137 bytes | 3.565 s | 124.263 s | 123.770 s | 236.7 MiB |
+| 576 × 576 | 1,783 bytes | 12.984 s | 2,465.714 s | 2,465.188 s | 287.2 MiB |
 
 The compressed file is byte-identical to both the original CPU codec and the
 CLI phone example. The app's input and reconstructed RGB pixels each match
@@ -107,11 +108,28 @@ not degraded. Its 41,372-byte PNG and measured hashes are in the
 [app-results.json](examples/pixnio/app-results.json), separate from the CLI
 measurements above.
 
-The app has encoded the 576-pixel image into the exact 1,783-byte reference
-stream. Its first complete app decode attempt was killed by phone memory
-pressure. A strict retry with the updated memory plan is pending, and no final
-576-pixel phone PNG has been verified. The successful 128-pixel measurements
-verify the app service and native backend path using the earlier native build.
+The updated app fully encoded and decoded the 576-pixel photograph on the phone.
+Its 1,783-byte file matches the CPU codec exactly; its 755,951-byte PNG contains
+995,328 RGB bytes and is not degraded. The service decode took 41 minutes
+5.714 seconds, including a deliberate 1.249-second pause used to verify controls.
+The decoded image differs from the full-precision CPU reference by 0.508 RGB8
+levels on average (50.441 dB PSNR); PSNR against the scaled original is 16.924 dB.
+See [app-results576.json](examples/pixnio/app-results576.json) and the
+[original and phone reconstruction](examples/pixnio/README.md#576-pixel-app-cycle).
+
+Real phone control checks confirmed kernel state `T` during Pause, resumed state
+`R` after Resume, and a reaped worker with no PNG and zero active jobs after a
+128-pixel Cancel. The completed 576-pixel job also left zero active codec jobs
+and processes. Ten native tests cover Android 5 supervisor reaping and cleanup.
+The app uses bounded private scratch files automatically; standalone CLI users
+must supply `--spill-dir DIRECTORY` to enable the same memory plan.
+
+The full MeshCore app integration is published on its
+[default branch](https://github.com/mikecarper/meshcore-open/tree/dev) and existing
+[Android 5.1 branch](https://github.com/mikecarper/meshcore-open/tree/android-5.1.1-compat).
+It offers 128 through 576 in steps of 64, Pause/Resume/Cancel, measured photo
+compression size and preparation time, and estimated LoRa sending time.
+The historical 128-pixel service measurements used an earlier native build.
 
 ## Host export
 

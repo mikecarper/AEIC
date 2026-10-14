@@ -37,8 +37,31 @@ and measurements; [results.json](results.json) retains the separate CLI results.
 
 ![Reconstructed through the Android app service](app-decoded128.png)
 
-The app has also encoded the 576-pixel version into the exact 1,783-byte reference
-stream. Its full app decode is still pending.
+## 576-pixel app cycle
+
+The updated full app encoded and decoded the 576-pixel version on the same
+Android 5.1.1 phone using four threads. Encoding took 12.984 seconds and produced
+the exact 1,783-byte CPU reference file. Full app decoding took 2,465.714 seconds
+(41 minutes 5.714 seconds), including a deliberate 1.249-second pause. Native
+decode peak RSS was 294,092 KiB (287.2 MiB). The saved 755,951-byte PNG contains
+995,328 RGB bytes and is not degraded. It remains a lossy reconstruction.
+
+| Scaled original, 576 × 576 | PNG after the phone's encode/decode cycle |
+|---|---|
+| ![Scaled original](original576.png) | ![Decoded through the phone app](app-decoded576.png) |
+
+The reconstruction differs from the full-precision CPU reference by 0.508 RGB8
+levels on average (50.441 dB PSNR); its PSNR against the scaled original is
+16.924 dB. Real control tests confirmed kernel state `T` during Pause, state `R`
+after Resume, and a removed worker/no PNG/zero active jobs after a separate
+128-pixel Cancel. The completed 576 job left no native workers or active jobs.
+Hashes and measurements are in [app-results576.json](app-results576.json).
+Compared directly with the full native host PNG, only 167 of 995,328 channel
+values differ, each by one RGB8 level (85.883 dB PSNR). Pixel byte identity is
+not claimed. The native host PNG is unchanged by the memory optimization.
+The transmitted [phone-encoded576.aeic](phone-encoded576.aeic) requires the
+separately installed model. LoRa framing and parity increase this photograph's
+origin transmission to 2,241 bytes before relay-path overhead.
 
 `phone-recovered128.png` is a separate best-effort test. Four bytes were removed
 from the compressed file, one renderer layer was missing, and an entropy

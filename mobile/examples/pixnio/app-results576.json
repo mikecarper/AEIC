@@ -1,0 +1,97 @@
+{
+  "captured_utc": "2026-10-13T23:05:40.181777-07:00",
+  "phone": "LG L51AL",
+  "android": "5.1.1",
+  "api": 22,
+  "abi": "armeabi-v7a",
+  "execution": "Real Flutter ImageCodecService worker isolate and supervised native process on phone",
+  "model_identity": "AEIC_SE_FT2_NCNN",
+  "threads": 4,
+  "size": 576,
+  "encoded_bytes": 1783,
+  "encoded_byte_identical_to_original_cpu_codec": true,
+  "service_encode_ms": 12984,
+  "service_decode_ms": 2465714,
+  "timing": "Service and native wall times include the deliberate 1.249-second pause",
+  "deliberate_pause_ms": 1249,
+  "native": {
+    "encode": {
+      "wall_seconds": 12.553,
+      "peak_rss_kib": 98024
+    },
+    "decode": {
+      "wall_seconds": 2465.188,
+      "peak_rss_kib": 294092
+    }
+  },
+  "rgb_bytes": 995328,
+  "decode_degraded": false,
+  "lossy": true,
+  "pause_cancel_128": "Kernel State T, worker reaped, no PNG result, zero active jobs",
+  "pause_resume_576": "Kernel State T while paused and State R after resume",
+  "completion": "all_complete; clean PROCESS_EXIT; zero codec processes and active jobs",
+  "decoded_vs_cpu_reference": {
+    "maximum_absolute_rgb8_difference": 28,
+    "mean_absolute_rgb8_difference": 0.508009420010288,
+    "psnr_db": 50.44095662611327
+  },
+  "decoded_vs_scaled_original": {
+    "maximum_absolute_rgb8_difference": 254,
+    "mean_absolute_rgb8_difference": 22.78368638278035,
+    "psnr_db": 16.92431910043705
+  },
+  "original_pixels_match_scaled_source": true,
+  "native_executable_sha256": "4b6cd2babc3b1b5385cd996812976665210da640808e330b02ad2ab9094f2d1f",
+  "artifacts": {
+    "original576.png": {
+      "bytes": 754368,
+      "sha256": "32bc60973907369204908e90ffd84e0a8fce2f6631342dc138907cfed3cc7b61"
+    },
+    "app-decoded576.png": {
+      "bytes": 755951,
+      "sha256": "d833f21f4afb03547813e59e7efb079cb1291a9e9886c20eea8a1df7d4c1a84e"
+    },
+    "phone-encoded576.aeic": {
+      "bytes": 1783,
+      "sha256": "35c15d496c87270f38a801562f0297e8b2d9c4a01ce94f809fdec58b5564d385"
+    },
+    "app-control-results576.txt": {
+      "bytes": 344,
+      "sha256": "560834d11732be4ae6d544cf2e4de2e269395f844701aebd9329c7f01b8e50cb"
+    },
+    "app-completion576.txt": {
+      "bytes": 18,
+      "sha256": "73945d0ee273856fc8639c0defe3b8c8d0e9a543a9fbd64f9a311a8df746c4c5"
+    },
+    "app-pause-cancel128.txt": {
+      "bytes": 87,
+      "sha256": "a47e1b0f98636b6b40bba8c2d4663f3b58809441b494c51d320f0030eaf605c3"
+    },
+    "app-pause-resume576.txt": {
+      "bytes": 125,
+      "sha256": "c9540033bf1bb44d70ec13423c66968f21c58c08c4ed0929ab4cdc7b890a77c0"
+    }
+  },
+  "source": "https://pixnio.com/nature-landscapes/river/landscape-water-nature-tree-river-forest-mountain",
+  "original_png": "original576.png",
+  "decoded_png": "app-decoded576.png",
+  "encoded_file": "phone-encoded576.aeic",
+  "decoded_vs_native_host": {
+    "maximum_absolute_rgb8_difference": 1,
+    "mean_absolute_rgb8_difference": 0.00016778388631687242,
+    "psnr_db": 85.88330111286413,
+    "different_rgb_components": 167,
+    "compared_rgb_components": 995328,
+    "baseline_png_sha256": "36fef8cf0d69e8aa69aa5c7bdf2d3f3cec26bbd4dc93984c55ec9f7b1e0912da",
+    "baseline_byte_identical_to_memory_optimized_host_png": true
+  },
+  "normal_app_ui_verified": {
+    "entrypoint": "Normal full MeshCore app, lib/main.dart",
+    "apk_sha256": "39af4888578c2ee807bda3ff9fe0c7ecf9507a29d43938e2cb028a502c88f796",
+    "image_messages_enabled": true,
+    "selected_model": "AEIC FT2 phone model",
+    "selected_model_check_circle_observed": true,
+    "automatic_decode_enabled": false,
+    "models_and_preferences_retained_during_install": true
+  }
+}

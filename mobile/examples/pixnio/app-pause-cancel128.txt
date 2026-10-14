@@ -1,0 +1,1 @@
+paused=true kernel_state=T pid=18609 stable_progress=0.0019723865877712033 group=18609

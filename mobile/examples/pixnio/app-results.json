@@ -13,7 +13,7 @@
   "encoded_byte_identical_to_cli_phone_example": true,
   "service_encode_ms": 3565,
   "service_decode_ms": 124263,
-  "native_decode_seconds": 123.770,
+  "native_decode_seconds": 123.77,
   "native_decode_peak_rss_kib": 242384,
   "decode_degraded": false,
   "decoded_png": "app-decoded128.png",
@@ -34,6 +34,6 @@
     "regular_files_verified": 4724,
     "controlled_shared_weight_links_created": 4192
   },
-  "larger_app_decode_status": "576-pixel encoding produced the exact 1783-byte reference stream; full app decoding is pending",
+  "larger_app_decode_status": "576-pixel full app cycle passed: exact 1,783-byte stream, 41m 5.714s service decode, 287.2 MiB native peak; see app-results576.json",
   "source": "https://pixnio.com/nature-landscapes/river/landscape-water-nature-tree-river-forest-mountain"
 }

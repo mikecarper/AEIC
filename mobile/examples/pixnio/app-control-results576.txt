@@ -1,0 +1,3 @@
+ANDROID_NATIVE_CODEC_SMOKE_STARTED
+ANDROID_NATIVE_CODEC_CONTROL size=128 paused=true kernel_state=T cancelled=true worker_reaped=true active_jobs=0
+ANDROID_NATIVE_CODEC_SMOKE size=576 bytes=1783 sha256=35c15d496c87270f38a801562f0297e8b2d9c4a01ce94f809fdec58b5564d385 rgb=995328 degraded=false encode_ms=12984 decode_ms=2465714 png_bytes=755951
