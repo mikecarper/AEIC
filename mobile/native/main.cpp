@@ -4,6 +4,7 @@
 #include "recovery.h"
 #include "tiled_attention.h"
 #include "direct_allocator.h"
+#include "file_hash.h"
 #include "net.h"
 #include <algorithm>
 #include <chrono>
@@ -45,6 +46,7 @@ struct Args {
     std::string directory, bitstream, output, verify, dump, stage_only, stop_after;
     std::string input, bitstream_output;
     std::string hash_file;
+    bool hash_decimal = false;
     std::vector<std::string> tensors;
     int threads = 2;
     int model_size = 0;
@@ -896,6 +898,7 @@ Args arguments(int argc, char** argv) {
         if (key == "--verify-integers-only") { result.integers_only = true; continue; }
         if (key == "--strict-verify") { result.strict = true; continue; }
         if (key == "--best-effort") { result.best_effort = true; continue; }
+        if (key == "--hash-decimal") { result.hash_decimal = true; continue; }
         if (key == "--help") {
             std::printf("aeic_decode --model-dir DIR --bitstream FILE --output FILE.png|FILE.ppm\n"
                 "aeic_decode --encode --model-dir DIR --input FILE.ppm --bitstream-output FILE.aeic\n"
@@ -905,7 +908,7 @@ Args arguments(int argc, char** argv) {
                 "  [--model-size N] (128..576, divisible by 64; override codec metadata)\n"
                 "  [--best-effort] [--stage-timeout-ms N] (recover with DEGRADED warnings)\n"
                 "Diagnostics only: --stage-only NAME --tensor SLOT=C,H,W:FILE.f32\n");
-            std::printf("File integrity: aeic_decode --hash-file FILE\n");
+            std::printf("File integrity: aeic_decode --hash-file FILE [--hash-decimal]\n");
             std::exit(0);
         }
         if (++i == argc) throw std::runtime_error("missing value for " + key);
@@ -951,9 +954,11 @@ int main(int argc, char** argv) {
     try {
         Args args = arguments(argc, argv);
         if (!args.hash_file.empty()) {
-            auto bytes = aeic::read_file(args.hash_file);
-            std::printf("HASH_FILE bytes=%zu fnv1a64=%s path=%s\n", bytes.size(),
-                aeic::hash_hex(aeic::hash_bytes(bytes.data(), bytes.size())).c_str(), args.hash_file.c_str());
+            const auto hash = aeic::hash_file_streamed(args.hash_file);
+            std::printf("HASH_FILE bytes=%llu fnv1a64=%s", static_cast<unsigned long long>(hash.bytes),
+                aeic::hash_hex(hash.fnv1a64).c_str());
+            if (args.hash_decimal) std::printf(" fnv1a64_decimal=%llu", static_cast<unsigned long long>(hash.fnv1a64));
+            std::printf(" path=%s\n", args.hash_file.c_str());
             return 0;
         }
         if (args.integers_only) std::printf("VERIFY_MODE exact_integer_references_only=true float_references=false\n");
