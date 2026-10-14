@@ -184,9 +184,10 @@ while processing heads and query rows in bounded tiles. It reduces score
 storage without changing the attention calculation. Other exports retain
 the built-in layer; the frontend registers the custom type before graph load.
 
-`--hash-file FILE` reports byte length and FNV-1a for transport checks before
-running raw stage fixtures. Keep dump files in a different directory from
-golden references.
+`--hash-file FILE` streams through a fixed 64 KiB buffer and reports byte length
+and hexadecimal FNV-1a for transport checks. Add `--hash-decimal` for an unsigned
+decimal FNV field. No models are loaded. Keep dump files in a different directory
+from golden references.
 
 The copies under `rans/` retain the upstream license headers. Their decoder
 adds checked byte reads, index validation, and terminal-state diagnostics;

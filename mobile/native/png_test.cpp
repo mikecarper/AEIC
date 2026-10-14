@@ -43,6 +43,30 @@ int main() {
         expect(decoded[0] == 0 && decoded[7] == 0 &&
                !std::memcmp(decoded.data() + 1, pixels.data(), 6) &&
                !std::memcmp(decoded.data() + 8, pixels.data() + 6, 6), "PNG pixels roundtrip exactly");
+        std::vector<uint8_t> boundary_pixels(576 * 576 * 3);
+        for (size_t i = 0; i < boundary_pixels.size(); ++i) boundary_pixels[i] = static_cast<uint8_t>(i * 31);
+        auto boundary_png = aeic::make_png(576, 576, boundary_pixels);
+        expect(be32(boundary_png.data() + 16) == 576 && be32(boundary_png.data() + 20) == 576, "576 PNG boundary dimensions");
+        compressed.clear();
+        cursor = 8;
+        while (cursor < boundary_png.size()) {
+            const uint32_t chunk_length = be32(boundary_png.data() + cursor);
+            const uint8_t* type = boundary_png.data() + cursor + 4;
+            if (!std::memcmp(type, "IDAT", 4)) compressed.insert(compressed.end(), type + 4, type + 4 + chunk_length);
+            cursor += chunk_length + 12;
+        }
+        decoded.resize((576 * 3 + 1) * 576); length = decoded.size();
+        expect(uncompress(decoded.data(), &length, compressed.data(), compressed.size()) == Z_OK && length == decoded.size(), "576 PNG scanlines decompress");
+        for (size_t row = 0; row < 576; ++row) {
+            expect(decoded[row * (576 * 3 + 1)] == 0 &&
+                !std::memcmp(decoded.data() + row * (576 * 3 + 1) + 1, boundary_pixels.data() + row * 576 * 3, 576 * 3), "576 PNG pixels roundtrip");
+        }
+        for (uint32_t invalid : {577u, 640u}) {
+            bool rejected = false;
+            try { aeic::make_png(invalid, invalid, std::vector<uint8_t>(size_t(invalid) * invalid * 3)); }
+            catch (const std::runtime_error&) { rejected = true; }
+            expect(rejected, "PNG beyond576 must be rejected");
+        }
         std::printf("PASS: native RGB8 PNG signature, dimensions, chunk CRC32, zlib scanlines, exact pixels\n");
         return 0;
     } catch (const std::exception& error) {

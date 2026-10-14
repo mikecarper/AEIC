@@ -25,7 +25,7 @@ void chunk(std::vector<uint8_t>& png, const char* type,
 }
 std::vector<uint8_t> make_png(uint32_t width, uint32_t height,
                               const std::vector<uint8_t>& rgb) {
-    if (!width || !height || width > 512 || height > 512 || rgb.size() != size_t(width) * height * 3)
+    if (!width || !height || width > 576 || height > 576 || rgb.size() != size_t(width) * height * 3)
         throw std::runtime_error("invalid PNG RGB dimensions");
     size_t row = size_t(width) * 3;
     std::vector<uint8_t> filtered((row + 1) * height, 0);

@@ -18,20 +18,20 @@ weights remain FP32; renderer files use FP16 storage with FP32 runtime arithmeti
 ## Verified results
 
 Measured on 2026-10-13 using the real Pixnio photograph below. The earlier
-256/512 encoder runs used two threads; the 128/576 runs used four threads.
+256/512 encoder runs used two threads; the other sizes used four threads.
 
 | Input | Bitstream, including header | Bits/pixel | Encoding proof | Phone encode time | Phone encode peak RSS |
 |---|---:|---:|---|---:|---:|
 | 128 × 128 | 137 bytes | 0.06689 | Phone and original CPU codec | 2.172 s | 45.9 MiB |
-| 192 × 192 | 270 bytes | 0.05859 | Original CPU codec; phone pending | — | — |
+| 192 × 192 | 270 bytes | 0.05859 | Phone and original CPU codec | 2.934 s | 46.0 MiB |
 | 256 × 256 | 407 bytes | 0.04968 | Phone and original CPU codec | 6.213 s | 48.9 MiB |
-| 320 × 320 | 602 bytes | 0.04703 | Original CPU codec; phone pending | — | — |
-| 384 × 384 | 804 bytes | 0.04362 | Original CPU codec; phone pending | — | — |
-| 448 × 448 | 1,122 bytes | 0.04472 | Original CPU codec; phone pending | — | — |
+| 320 × 320 | 602 bytes | 0.04703 | Phone and original CPU codec | 3.889 s | 47.3 MiB |
+| 384 × 384 | 804 bytes | 0.04362 | Phone and original CPU codec | 5.075 s | 49.4 MiB |
+| 448 × 448 | 1,122 bytes | 0.04472 | Phone and original CPU codec | 6.630 s | 64.0 MiB |
 | 512 × 512 | 1,363 bytes | 0.04160 | Phone and original CPU codec | 13.632 s | 148.0 MiB |
 | 576 × 576 | 1,783 bytes | 0.04299 | Phone and original CPU codec | 10.348 s | 100.0 MiB |
 
-All four phone-generated files are byte-identical to the original CPU codec's files.
+All eight phone-generated files are byte-identical to the original CPU codec's files.
 The phone decoded its own entropy streams with zero index or symbol mismatches
 and valid terminal rANS states. Complete normal RGB reconstruction has passed
 on the phone at these sizes:
@@ -50,7 +50,7 @@ against the CPU reference is 0.505 RGB8 levels (50.618 dB PSNR). Full 576-pixel
 phone reconstruction is pending.
 
 All eight CPU files pass exact entropy round-trip checks. The intermediate
-sizes and 576 pixels still need full phone validation. File size depends
+sizes and 576 pixels still need full phone RGB validation. File size depends
 on image content: accepting a resolution in this range does not guarantee a
 2,000-byte or 2,048-byte file budget. The measured 576-pixel file fits both
 limits for this photograph.
