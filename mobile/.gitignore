@@ -3,4 +3,5 @@ __pycache__/
 results/
 models-*/
 build-*/
+.android-build/
 integration-work/
