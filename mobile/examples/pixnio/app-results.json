@@ -1,0 +1,39 @@
+{
+  "phone": "LG L51AL",
+  "android": "5.1.1",
+  "api": 22,
+  "abi": "armeabi-v7a",
+  "execution": "Flutter ImageCodecService worker isolate and Android native process backend",
+  "model_identity": "AEIC_SE_FT2_NCNN",
+  "threads": 4,
+  "size": 128,
+  "encoded_bytes": 137,
+  "encoded_sha256": "49dc462cb8fddccb3e775f288a75756eb408375eb1432521f9531a51aecde1c7",
+  "encoded_byte_identical_to_original_cpu_codec": true,
+  "encoded_byte_identical_to_cli_phone_example": true,
+  "service_encode_ms": 3565,
+  "service_decode_ms": 124263,
+  "native_decode_seconds": 123.770,
+  "native_decode_peak_rss_kib": 242384,
+  "decode_degraded": false,
+  "decoded_png": "app-decoded128.png",
+  "decoded_png_bytes": 41372,
+  "decoded_png_sha256": "03c941014ad157679adbcfa253450c92ee4abcb9bdf6e2e42607e7e516ae0506",
+  "input_rgb_vs_cli_input": {
+    "max_absolute_rgb8_difference": 0,
+    "mean_absolute_rgb8_difference": 0
+  },
+  "decoded_rgb_vs_cli_reconstruction": {
+    "max_absolute_rgb8_difference": 0,
+    "mean_absolute_rgb8_difference": 0
+  },
+  "lossy": true,
+  "model_validation": {
+    "performed_in_app": true,
+    "method": "Dart streaming SHA-256 validation and stage configuration checks",
+    "regular_files_verified": 4724,
+    "controlled_shared_weight_links_created": 4192
+  },
+  "larger_app_decode_status": "576-pixel encoding produced the exact 1783-byte reference stream; full app decoding is pending",
+  "source": "https://pixnio.com/nature-landscapes/river/landscape-water-nature-tree-river-forest-mountain"
+}

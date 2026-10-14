@@ -1,9 +1,9 @@
-# AEIC on Android: native CLI prototype
+# AEIC on Android: native CLI and app prototype
 
 This prototype runs AEIC-SE encoding and decoding with native ncnn CPU inference
 on ARMv7 NEON, Android API 21 or later. The tested phone is an LG L51AL running
-Android 5.1.1 / API 22 with 1 GB RAM. It is a command line experiment accessed
-through ADB.
+Android 5.1.1 / API 22 with 1 GB RAM. The native CLI is accessed through ADB;
+the Flutter app service has also completed an on-device 128-pixel round trip.
 
 The supported square input sizes are **128, 192, 256, 320, 384, 448, 512, and
 576 pixels**. Export a renderer parameter set for the chosen size and use its
@@ -64,6 +64,30 @@ Optional `--best-effort` recovery isolates model stages and labels substituted
 results `DEGRADED`. A damaged 128-pixel test with reference and model failures
 completed in 137.142 seconds with six recovery events and a 44,449-byte PNG.
 Fallback can produce a usable image but cannot restore lost details.
+
+## Android app service verification
+
+The app's real `ImageCodecService` encoded and fully decoded the 128-pixel
+photograph on the same phone through a worker isolate and the Android native
+process backend. The app first validated all 4,724 installed model files using
+streaming SHA-256 checks and created 4,192 controlled shared-weight links.
+The test used four native threads; the production default remains two.
+
+| Input | Compressed file | Service encode | Service decode | Native decode | Native decode peak RSS |
+|---|---:|---:|---:|---:|---:|
+| 128 × 128 | 137 bytes | 3.565 s | 124.263 s | 123.770 s | 236.7 MiB |
+
+The compressed file is byte-identical to both the original CPU codec and the
+CLI phone example. The app's input and reconstructed RGB pixels each match
+their corresponding CLI images exactly. The reconstruction is lossy and was
+not degraded. Its 41,372-byte PNG and measured hashes are in the
+[app example](examples/pixnio/README.md#android-app-service-proof) and
+[app-results.json](examples/pixnio/app-results.json), separate from the CLI
+measurements above.
+
+The app has encoded the 576-pixel image into the exact 1,783-byte reference
+stream; its complete app reconstruction is still pending. These measurements
+verify the app service and native backend path.
 
 ## Host export
 

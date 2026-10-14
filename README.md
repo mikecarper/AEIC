@@ -17,6 +17,9 @@ University of Science and Technology of China, The Hong Kong Polytechnic Univers
 Android CPU encoding and decoding, including the Android 5.1 phone experiments,
 are documented in the [native mobile port](mobile/README.md). The port supports
 square sizes from 128 to 576 pixels and optional best-effort recovery.
+The [Android app service example](mobile/examples/pixnio/README.md#android-app-service-proof)
+also proves an on-device 128-pixel encode and full decode on Android 5.1.1:
+the compressed photograph is 137 bytes, and app decoding took 124.263 seconds.
 
 <p align="center"><img src="assets/overview.png" width="70%"></p>
 
